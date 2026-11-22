@@ -4,8 +4,8 @@ A hit starts at an onset of the piece's own track and ends at its next onset, or
 at the drum's maximum length. Its score combines:
 
 - isolation: how much louder this drum is than all other drums together during
-  the hit (the other separated tracks), so the one-shot cut from the full drum
-  stem holds as little of the rest of the kit as possible;
+  the hit (the other separated tracks). Where other drums play along, the
+  separation leaves more of them behind in this drum's track;
 - decay: how far the hit has died away when it ends, so a hit cut short by the
   next one ranks lower; one that has not died away MIN_DECAY_DB is not picked;
 - strength: how close its peak is to the loudest hits of that drum. A hit more

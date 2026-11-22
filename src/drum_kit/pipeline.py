@@ -47,13 +47,10 @@ class DrumKit:
         drums = self.extractor.extract(audio) if self.extractor else audio
         audio_io.write(out_dir / f"drums{ext}", drums)
         pieces = self.splitter.separate(drums)
-        for piece in PIECES:
-            audio_io.write(out_dir / "pieces" / f"{piece}{ext}", pieces[piece])
 
-        for folder in ("isolated", "drums"):   # one-shots of an earlier run would mix in
-            for old in (out_dir / "hits" / folder).glob(f"*{ext}"):
-                if old.stem.rsplit("_", 1)[0] in PIECES:
-                    old.unlink()
+        for old in (out_dir / "hits").glob(f"*{ext}"):   # one-shots of an earlier run
+            if old.stem.rsplit("_", 1)[0] in PIECES:
+                old.unlink()
 
         rate = drums.sample_rate
         found = {}
@@ -77,10 +74,7 @@ class DrumKit:
                 result.note = "no hit at full strength that decays before the next one"
             for n, hit in enumerate(best, 1):
                 name = f"{piece}_{n}{ext}"
-                audio_io.write(out_dir / "hits" / "isolated" / name,
-                               Audio(hitlib.cut(track, hit, rate), rate))
-                audio_io.write(out_dir / "hits" / "drums" / name,
-                               Audio(hitlib.cut(drums.samples, hit, rate), rate))
+                audio_io.write(out_dir / "hits" / name, Audio(hitlib.cut(track, hit, rate), rate))
                 result.picked.append({**hit.to_dict(), "file": name,
                                       "length": round((hit.end - hit.start) / rate, 3)})
 

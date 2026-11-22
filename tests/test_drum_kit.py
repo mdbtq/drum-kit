@@ -121,11 +121,11 @@ class PipelineTest(unittest.TestCase):
         out = self.dir / "kit"
         report = DrumKit(None, FakeSplitter(tracks), count=3).process(src, out, ".wav")
         self.assertFalse(report.drums_extracted)
+        self.assertTrue((out / "drums.wav").exists())
+        self.assertFalse((out / "pieces").exists())
         for p in PIECES:
-            self.assertTrue((out / "pieces" / f"{p}.wav").exists())
             for n in (1, 2, 3):
-                self.assertTrue((out / "hits" / "isolated" / f"{p}_{n}.wav").exists())
-                self.assertTrue((out / "hits" / "drums" / f"{p}_{n}.wav").exists())
+                self.assertTrue((out / "hits" / f"{p}_{n}.wav").exists())
         data = json.loads((out / "report.json").read_text())
         self.assertEqual([p["piece"] for p in data["pieces"]], list(PIECES))
         self.assertEqual(len(data["pieces"][0]["picked"]), 3)
@@ -141,7 +141,7 @@ class PipelineTest(unittest.TestCase):
         ride = next(r for r in report.pieces if r.piece == "ride")
         self.assertEqual(ride.picked, [])
         self.assertIn("not in this track", ride.note)
-        self.assertFalse((self.dir / "kit" / "hits" / "isolated" / "ride_1.wav").exists())
+        self.assertFalse((self.dir / "kit" / "hits" / "ride_1.wav").exists())
 
 
 if __name__ == "__main__":

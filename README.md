@@ -2,7 +2,9 @@
 
 Extracts the drums from a track as cleanly as possible, splits them per drum
 (kick, snare, toms, hihat, ride, crash) and writes the best one-shots of each
-drum: the cleanest, fullest hits, chosen so they differ from each other.
+drum: the cleanest, fullest hits, chosen so they differ from each other. It
+keeps the drum stem and the one-shots; the separated track per drum is only an
+intermediate step.
 
 Unlike [stem-split](https://github.com/mdbtq/stem-split), it does not try to
 keep every instrument: only the drums matter, so no compromise is made for the
@@ -23,10 +25,10 @@ rest of the mix.
 ## Install
 
 ```bash
-uv tool install --python 3.12 git+https://github.com/mdbtq/drum-kit@v0.1.0
+uv tool install --python 3.12 git+https://github.com/mdbtq/drum-kit@v0.2.0
 ```
 
-Or with pipx: `pipx install --python python3.12 git+https://github.com/mdbtq/drum-kit@v0.1.0`.
+Or with pipx: `pipx install --python python3.12 git+https://github.com/mdbtq/drum-kit@v0.2.0`.
 From a local checkout: `make build/install`.
 
 ## Usage
@@ -51,9 +53,9 @@ track.wav: drums extracted -> track_drumkit
 ```
 
 - `clean` – how much louder this drum is than all other drums together during
-  the hit. Negative values (the crash above, which always sounds with the
-  kick) mean the version cut from the full drum stem contains other drums;
-  use the isolated one.
+  the hit. Where other drums play along (the crash above always sounds with
+  the kick), the separation leaves more of them behind, so a negative value
+  means a one-shot with more artifacts.
 - `decay` – how far the hit has died away at the end of the one-shot.
 - A drum is reported as not in the track when its separated track holds only
   leakage from the others (see below); no one-shots are written for it.
@@ -64,20 +66,17 @@ track.wav: drums extracted -> track_drumkit
 
 ```
 track_drumkit/
-  drums.wav                 the extracted drum stem
-  pieces/kick.wav ...       one track per drum: kick, snare, toms, hihat, ride, crash
-  hits/isolated/kick_1.wav  one-shots cut from the drum's own track
-  hits/drums/kick_1.wav     the same hits cut from the full drum stem
-  report.json               every pick with its time, scores and length
-
-Running it again on the same track replaces the one-shots of the earlier run.
+  drums.wav         the extracted drum stem
+  hits/kick_1.wav   one-shots, cut from the drum's own separated track
+  hits/kick_2.wav
+  ...
+  report.json       every pick with its time, scores and length
 ```
 
-The two versions of a hit sound different: the isolated one holds only that
-drum but carries some separation artifacts; the one from the drum stem sounds
-more natural but contains whatever else of the kit plays at that moment. The
-ranking favours moments where the drum plays alone, so the difference stays
-small for the best picks.
+A one-shot holds only that drum: it is cut from the drum's separated track,
+not from the full drum stem, where the rest of the kit bleeds in at nearly
+every hit. Running it again on the same track replaces the one-shots of the
+earlier run.
 
 ## How the drums are extracted
 
@@ -163,8 +162,8 @@ fakes; audio I/O and the Demucs and RoFormer wrappers come from stem-split.
 - Demucs and audio-separator are MIT-licensed. Check the licence of the model
   weights (DrumSep in particular) before using the one-shots commercially.
 - The separation is the limit: where the drums are buried in a dense mix, the
-  isolated tracks carry artifacts and the full drum stem carries leakage. The
-  ranking picks the moments where both are least.
+  separated drum tracks carry artifacts. The ranking picks the moments where
+  they are least.
 
 ## Tests
 

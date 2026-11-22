@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "drum-kit"
+dynamic = ["version"]
+description = "Extract the drums from a track and pick the best one-shots per drum"
+requires-python = ">=3.10,<3.15"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [{name = "MDBTQ"}]
+dependencies = [
+    "stem-split @ git+https://github.com/mdbtq/stem-split@v0.3.0",  # separators, audio I/O
+    "numpy>=1.24",
+    "scipy>=1.10",
+]
+
+[project.scripts]
+drum-kit = "drum_kit.cli:main"
+
+[project.urls]
+Repository = "https://github.com/mdbtq/drum-kit"
+
+[tool.setuptools.dynamic]
+version = {attr = "drum_kit.__version__"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

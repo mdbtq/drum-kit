@@ -18,17 +18,18 @@ rest of the mix.
 - `ffmpeg` / `ffprobe` on PATH
 - [uv](https://docs.astral.sh/uv/) for the install commands below (or pipx)
 - Network access on first use of a model. Demucs weights are cached in
-  `~/.cache/huggingface`; the DrumSep weights (and the RoFormer weights for
+  `~/.cache/huggingface` and loaded offline from then on (no `HF_TOKEN`
+  needed); the DrumSep weights (and the RoFormer weights for
   `--remove-vocals`) come through audio-separator and are cached in
   `~/.cache/stem-split/audio-separator`, shared with stem-split.
 
 ## Install
 
 ```bash
-uv tool install --python 3.12 git+https://github.com/mdbtq/drum-kit@v0.2.0
+uv tool install --python 3.12 git+https://github.com/mdbtq/drum-kit@v0.2.1
 ```
 
-Or with pipx: `pipx install --python python3.12 git+https://github.com/mdbtq/drum-kit@v0.2.0`.
+Or with pipx: `pipx install --python python3.12 git+https://github.com/mdbtq/drum-kit@v0.2.1`.
 From a local checkout: `make build/install`.
 
 ## Usage

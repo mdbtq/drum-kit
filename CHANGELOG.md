@@ -4,6 +4,12 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and the project uses [Semantic Versioning](https://semver.org/).
 
+## [0.2.1] - 2026-11-23
+
+### Fixed
+- Requires stem-split 0.3.1: cached Demucs models load without contacting the
+  Hugging Face hub, so the warning about unauthenticated requests is gone.
+
 ## [0.2.0] - 2026-11-22
 
 ### Changed
